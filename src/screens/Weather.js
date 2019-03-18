@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList ,Image} from 'react-native';
-import {
-    STATE,
-    COUNTRY,
-    BASE_URL,
-    KEY,
-    CITY,
-    CITYY
-} from '../common/constants';
+import { View, Text, FlatList, Image } from 'react-native';
 import styles from '../styles/styles';
-
+import { connect } from 'react-redux';
+import { getWeather } from '../ducks/weather';
 
 class Weather extends Component {
     constructor(props) {
@@ -22,45 +15,34 @@ class Weather extends Component {
         };
     }
 
-    componentDidMount() {
-        this.getWeather();
+    static getDerivedStateFromProps(props) {
+        return {
+            weather: props.weather.data
+        };
     }
 
-    getWeather = async () => {
-        const param = [
-            `${CITY}=${this.state.city}`,
-            `${STATE}=${this.state.state}`,
-            `${COUNTRY}=${this.state.country}`,
-            `${KEY}`
-        ].join('&');
+    componentDidMount() {
+        this.props.getWeather(this.state.country, this.state.state, this.state.city);
+    }
 
-        fetch(`${BASE_URL}${CITYY}?${param}`)
-            .then(response => response.json())
-            .then(responseJson => {
-                console.log(responseJson);
-                this.setState({ weather: responseJson.data });
-                console.log(`${BASE_URL}${CITYY}?${param}`);
-            });
-    };
-
-    getImage(){
-        let imageName = "01d";
-        if (this.state.weather) imageName = this.state.weather.current.weather.ic;
+    getImage() {
+        let imageName = '01d';
+        if (this.state.weathers) imageName = this.state.weathers.current.weather.ic;
         const images = {
-            '01d':require("../image/01d.png"),
-            '01n':require("../image/01n.png"),
-            '02d':require("../image/02d.png"),
-            '02n':require("../image/02n.png"),
-            '03d':require("../image/03d.png"),
-            '04d':require("../image/04d.png"),
-            '09d':require("../image/09d.png"),
-            '10d':require("../image/10d.png"),
-            '10n':require("../image/10n.png"),
-            '11d':require("../image/11d.png"),
-            '13d':require("../image/13d.png"),
-            '50d':require("../image/50d.png")
-        }
-        return images[imageName]
+            '01d': require('../assets/images/01d.png'),
+            '01n': require('../assets/images/01n.png'),
+            '02d': require('../assets/images/02d.png'),
+            '02n': require('../assets/images/02n.png'),
+            '03d': require('../assets/images/03d.png'),
+            '04d': require('../assets/images/04d.png'),
+            '09d': require('../assets/images/09d.png'),
+            '10d': require('../assets/images/10d.png'),
+            '10n': require('../assets/images/10n.png'),
+            '11d': require('../assets/images/11d.png'),
+            '13d': require('../assets/images/13d.png'),
+            '50d': require('../assets/images/50d.png')
+        };
+        return images[imageName];
     }
 
     render() {
@@ -69,30 +51,43 @@ class Weather extends Component {
         return (
             <View>
                 <View style={styles.toolBar}>
-                    <Text style={styles.toolBarText}>
-                        Weather of {this.state.city}
-                    </Text>
+                    <Text style={styles.toolBarText}>Weather of {this.state.city}</Text>
                 </View>
                 <View>
-                    <Text style = {styles.flatListCell}>
-                        Time Stamp  :  {this.state.weather.current.weather.ts}
+                    <Text style={styles.flatListCell}>
+                        Time Stamp : {this.state.weather.current.weather.ts}
                     </Text>
-                    <Text style = {styles.flatListCell}>
-                        Temperature in Celcious  :  {this.state.weather.current.weather.tp}
+                    <Text style={styles.flatListCell}>
+                        Temperature in Celcious : {this.state.weather.current.weather.tp}
                     </Text>
-                    <Text style = {styles.flatListCell}>
-                        Humidity  :  {this.state.weather.current.weather.hu}
+                    <Text style={styles.flatListCell}>
+                        Humidity : {this.state.weather.current.weather.hu}
                     </Text>
-                    <Text style = {styles.flatListCell}>
-                        Wind Speed  :  {this.state.weather.current.weather.ws}
+                    <Text style={styles.flatListCell}>
+                        Wind Speed : {this.state.weather.current.weather.ws}
                     </Text>
                 </View>
-                <View style={{alignItems:"center",padding:20}}>
-                    <Image source = {this.getImage()} style = {{width:200,height:200}}/>    
+                <View style={{ alignItems: 'center', padding: 20 }}>
+                    <Image source={this.getImage()} style={{ width: 200, height: 200 }} />
                 </View>
             </View>
         );
     }
 }
 
-export default Weather;
+const mapStateToProps = state => {
+    return {
+        weather: state.weather
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getWeather: (country, state, city) => dispatch(getWeather(country, state, city))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Weather);

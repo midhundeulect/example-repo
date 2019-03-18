@@ -7,7 +7,7 @@ import thunkMiddleware from 'redux-thunk';
 import countries from '../ducks/countries';
 import states from '../ducks/states';
 import cities from '../ducks/cities';
-// import weather from '../ducks/weather';
+import weather from '../ducks/weather';
 
 const rootPersistConfig = {
     key: 'root',
@@ -23,7 +23,7 @@ const rootReducer = combineReducers({
     countries,
     states,
     cities,
-    // weather
+    weather
 });
 
 const store = createStore(

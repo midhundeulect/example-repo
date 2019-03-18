@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
 import styles from '../styles/styles';
-import {connect} from 'react-redux'
-import {getCities} from '../ducks/cities'
+import { connect } from 'react-redux';
+import { getCities } from '../ducks/cities';
 
 class City extends Component {
     constructor(props) {
@@ -15,16 +15,26 @@ class City extends Component {
         this.renderItem = this.renderItem.bind(this);
     }
 
-    static getDerivedStateFromProps(props) {
+    static getDerivedStateFromProps(props, state) {
+        let cities = [];
+        if (
+            props.cities.cities &&
+            props.cities.cities[state.country] &&
+            props.cities.cities[state.country][state.state]
+        )
+            cities = props.cities.cities[state.country][state.state];
+
         return {
-            cities: props.cities
+            cities: cities
         };
     }
 
     componentDidMount() {
-        //console.log(this.state.country);
-        //console.log(this.state.state);
-        this.props.getCities(this.state.country,this.state.state);
+        if (
+            !this.props.cities.cities[this.state.country] ||
+            !this.props.cities.cities[this.state.country][this.state.state]
+        )
+            this.props.getCities(this.state.country, this.state.state);
     }
 
     keyExtractor(item, index) {
@@ -52,12 +62,12 @@ class City extends Component {
                                 {item.city}
                             </Text>
                         </View>
-                        {/* <View style={styles.cellImage}>
+                        <View style={styles.cellImage}>
                             <Image
-                                source={require('../image/red-arrow-graphic-6.jpg')}
+                                source={require('../assets/images/red-arrow-graphic-6.jpg')}
                                 style={styles.arrowImageStyle}
                             />
-                        </View> */}
+                        </View>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -69,20 +79,18 @@ class City extends Component {
             <View>
                 <View style={styles.toolBar}>
                     <View style={styles.toolBarTextView}>
-                        <Text style={styles.toolBarText}>
-                            {this.state.state}'s Cities
-                        </Text>
+                        <Text style={styles.toolBarText}>{this.state.state}'s Cities</Text>
                     </View>
-                    {/* <View style={styles.toolBarImageView}>
+                    <View style={styles.toolBarImageView}>
                         <Image
-                            source={require('../image/plus-hi.png')}
+                            source={require('../assets/images/plus-hi.png')}
                             style={styles.plusImageStyle}
                         />
-                    </View> */}
+                    </View>
                 </View>
                 <View>
                     <FlatList
-                        data={this.state.cities.cities}
+                        data={this.state.cities}
                         keyExtractor={this.keyExtractor}
                         renderItem={this.renderItem}
                     />
@@ -100,8 +108,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getCities: (country,state) => dispatch(getCities(country,state))
+        getCities: (country, state) => dispatch(getCities(country, state))
     };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(City);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(City);

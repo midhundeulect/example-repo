@@ -4,7 +4,7 @@ const GET_CITIES = 'ducks/cities/GET_CITIES';
 const GET_CITIES_SUCCESS = 'ducks/cities/GET_CITIES_SUCCESS';
 const GET_CITIES_FAILURE = 'ducks/cities/GET_CITIES_FAILURE';
 //REDUCER
-export default function reducer(state = { loading: false, error: null, cities: [] }, action = {}) {
+export default function reducer(state = { loading: false, error: null, cities: {} }, action = {}) {
     switch (action.type) {
         case GET_CITIES:
             return {
@@ -12,17 +12,20 @@ export default function reducer(state = { loading: false, error: null, cities: [
                 loading: true
             };
         case GET_CITIES_SUCCESS:
+            let newCities = state.cities;
+            newCities[action.payload.country] = {};
+            newCities[action.payload.country][action.payload.state] = action.payload.cities;
             return {
                 ...state,
                 loading: false,
-                cities: action.payload
+                cities: newCities
             };
         case GET_CITIES_FAILURE:
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
-                cities : []
+                cities: []
             };
         default:
             return state;
@@ -47,18 +50,16 @@ export function getCitiesFailure(error) {
     };
 }
 //Side Effects
-export function getCities(country,state) {
-    //console.log("GET CITIESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+export function getCities(country, state) {
     return async dispatch => {
-        console.log("GET CITIESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
         dispatch(getCitiesStart());
-        const params = [`state=${state}`,`country=${country}`,`key=${KEY}`].join('&');
-        console.log(params)
+        const params = [`state=${state}`, `country=${country}`, `key=${KEY}`].join('&');
+        console.log(params);
         try {
             let response = await fetch(`${BASE_URL}${CITIES}?${params}`);
-            console.log(`${BASE_URL}${CITIES}?${params}`)
+            console.log(`${BASE_URL}${CITIES}?${params}`);
             let json = await response.json();
-            dispatch(getCitiesSuccess(json.data));
+            dispatch(getCitiesSuccess({ country: country, state: state, cities: json.data }));
         } catch (error) {
             dispatch(getCitiesFailure());
         }

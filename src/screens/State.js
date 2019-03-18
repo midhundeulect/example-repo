@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
 import styles from '../styles/styles';
-import {connect} from 'react-redux';
-import {getStates} from '../ducks/states'
+import { connect } from 'react-redux';
+import { getStates } from '../ducks/states';
 
 class State extends Component {
     constructor(props) {
@@ -22,7 +22,8 @@ class State extends Component {
     }
 
     componentDidMount() {
-        this.props.getStates(this.state.country);
+        
+        if (!this.props.states.states[this.state.country]) this.props.getStates(this.state.country);
     }
 
     keyExtractor(item, index) {
@@ -49,12 +50,12 @@ class State extends Component {
                                 {item.state}
                             </Text>
                         </View>
-                        {/* <View style={styles.cellImage}>
+                        <View style={styles.cellImage}>
                             <Image
-                                source={require('../image/red-arrow-graphic-6.jpg')}
+                                source={require('../assets/images/red-arrow-graphic-6.jpg')}
                                 style={styles.arrowImageStyle}
                             />
-                        </View> */}
+                        </View>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -68,16 +69,16 @@ class State extends Component {
                     <View style={styles.toolBarTextView}>
                         <Text style={styles.toolBarText}>{this.state.country}'s States</Text>
                     </View>
-                    {/* <View style={styles.toolBarImageView}>
+                    <View style={styles.toolBarImageView}>
                         <Image
-                            source={require('../image/plus-hi.png')}
+                            source={require('../assets/images/plus-hi.png')}
                             style={styles.plusImageStyle}
                         />
-                    </View> */}
+                    </View>
                 </View>
                 <View>
                     <FlatList
-                        data={this.state.states.states}
+                        data={this.state.states.states[this.state.country]}
                         keyExtractor={this.keyExtractor}
                         renderItem={this.renderItem}
                     />
@@ -95,8 +96,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getStates: (country) => dispatch(getStates(country))
+        getStates: country => dispatch(getStates(country))
     };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(State);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(State);

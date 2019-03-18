@@ -20,7 +20,7 @@ class Country extends Component {
     }
 
     componentDidMount() {
-        this.props.getCountries();
+        if (this.props.countries.countries.length === 0) this.props.getCountries();
     }
 
     keyExtractor(item, index) {
@@ -47,10 +47,10 @@ class Country extends Component {
                             </Text>
                         </View>
                         <View style={styles.cellImage}>
-                            {/* <Image
-                                source={require('../image/red-arrow-graphic-6.jpg')}
+                            <Image
+                                source={require('../assets/images/red-arrow-graphic-6.jpg')}
                                 style={styles.arrowImageStyle}
-                            /> */}
+                            />
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -65,9 +65,12 @@ class Country extends Component {
                     <View style={styles.toolBarTextView}>
                         <Text style={styles.toolBarText}>Country List</Text>
                     </View>
-                    {/* <View style={styles.toolBarImageView}>
-                        <Image source={require('../image/plus-hi.png')} style={styles.plusImageStyle} />
-                    </View> */}
+                    <View style={styles.toolBarImageView}>
+                        <Image
+                            source={require('../assets/images/plus-hi.png')}
+                            style={styles.plusImageStyle}
+                        />
+                    </View>
                 </View>
                 <View>
                     <FlatList

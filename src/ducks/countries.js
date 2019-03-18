@@ -52,6 +52,7 @@ export function getCountriesFailure(error) {
 
 //Side effects
 export function getCountries() {
+    console.log("*************************")
     return async dispatch => {
         dispatch(getCountriesStart());
         const params = [`key=${KEY}`].join('&');

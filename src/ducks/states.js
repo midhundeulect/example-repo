@@ -2,9 +2,9 @@ import { BASE_URL, STATES, KEY } from '../common/constants';
 //Actions
 const GET_STATES = 'ducks/states/GET_STATES';
 const GET_STATES_SUCCESS = 'ducks/states/GET_STATES_SUCCESS';
-const GET_STATES_FAILURE = 'ducks/states/GET_STATES_FAILURE'
+const GET_STATES_FAILURE = 'ducks/states/GET_STATES_FAILURE';
 //Reducer
-export default function reducer(state = { loading: false, error: null, states: [] }, action = {}) {
+export default function reducer(state = { loading: false, error: null, states: {} }, action = {}) {
     switch (action.type) {
         case GET_STATES:
             return {
@@ -12,20 +12,21 @@ export default function reducer(state = { loading: false, error: null, states: [
                 loading: true
             };
         case GET_STATES_SUCCESS:
+            let newStates = state.states;
+            newStates[action.payload.country] = action.payload.states;
             return {
                 ...state,
                 loading: false,
-                states: action.payload
+                states: newStates
             };
         case GET_STATES_FAILURE:
             return {
                 ...state,
                 loading: false,
-                error: action.payload,
-                states: []
+                error: action.payload
             };
         default:
-            return state
+            return state;
     }
 }
 //Action Creator
@@ -50,12 +51,12 @@ export function getStatesFailure(error) {
 export function getStates(country) {
     return async dispatch => {
         dispatch(getStatesStart());
-        const params = [`country=${country}`,`key=${KEY}`].join('&');
+        const params = [`country=${country}`, `key=${KEY}`].join('&');
         try {
             let response = await fetch(`${BASE_URL}${STATES}?${params}`);
-            console.log(`${BASE_URL}${STATES}?${params}`)
+            console.log(`${BASE_URL}${STATES}?${params}`);
             let json = await response.json();
-            dispatch(getStatesSuccess(json.data));
+            dispatch(getStatesSuccess({ country: country, states: json.data }));
         } catch (error) {
             dispatch(getStatesFailure());
         }

@@ -3,7 +3,7 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 import Country from '../screens/Country';
 import State from '../screens/State';
 import City from '../screens/City';
-// import Weather from '../screens/Weather';
+import Weather from '../screens/Weather';
 
 const MainNavigator = createStackNavigator(
     {
@@ -16,9 +16,9 @@ const MainNavigator = createStackNavigator(
         City:{
             screen:City
         },
-        // Weather : {
-        //     screen:Weather
-        // }
+        Weather : {
+            screen:Weather
+        }
     },
     {
         initialRouteName: 'Country',
