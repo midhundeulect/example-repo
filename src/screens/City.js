@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Image,TextInput } from 'react-native';
 import styles from '../styles/styles';
 import { connect } from 'react-redux';
 import { getCities } from '../ducks/cities';
@@ -10,7 +10,9 @@ class City extends Component {
         this.state = {
             cities: [],
             country: props.navigation.getParam('country', null),
-            state: props.navigation.getParam('states', null)
+            state: props.navigation.getParam('states', null),
+            searchResults : [],
+            searching: false
         };
         this.renderItem = this.renderItem.bind(this);
     }
@@ -23,7 +25,6 @@ class City extends Component {
             props.cities.cities[state.country][state.state]
         )
             cities = props.cities.cities[state.country][state.state];
-
         return {
             cities: cities
         };
@@ -35,6 +36,16 @@ class City extends Component {
             !this.props.cities.cities[this.state.country][this.state.state]
         )
             this.props.getCities(this.state.country, this.state.state);
+    }
+
+    searchText(text) {
+        this.setState({ searching: text.length > 0 });
+        let searchResults = [];
+        this.props.cities.cities[this.state.country][this.state.state].map(item => {
+            if (item.city.includes(text)) 
+                searchResults.push(item);
+        });
+        this.setState({ searchResults: searchResults });
     }
 
     keyExtractor(item, index) {
@@ -81,16 +92,22 @@ class City extends Component {
                     <View style={styles.toolBarTextView}>
                         <Text style={styles.toolBarText}>{this.state.state}'s Cities</Text>
                     </View>
-                    <View style={styles.toolBarImageView}>
-                        <Image
-                            source={require('../assets/images/plus-hi.png')}
-                            style={styles.plusImageStyle}
-                        />
-                    </View>
+                </View>
+                <View
+                    style={{
+                        height: 50,
+                        backgroundColor: '#17CDB1',
+                        alignItems: 'center'
+                    }}>
+                    <TextInput
+                        placeholder="Search City"
+                        style={{ color: 'black' }}
+                        onChangeText={text => this.searchText(text)}
+                    />
                 </View>
                 <View>
                     <FlatList
-                        data={this.state.cities}
+                        data={this.state.searching?this.state.searchResults:this.state.cities}
                         keyExtractor={this.keyExtractor}
                         renderItem={this.renderItem}
                     />

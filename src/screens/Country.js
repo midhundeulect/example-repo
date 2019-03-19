@@ -1,18 +1,34 @@
 import React, { Component } from 'react';
-import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, Text, TouchableOpacity, View, TextInput } from 'react-native';
 import styles from '../styles/styles';
 import { getCountries } from '../ducks/countries';
 import { connect } from 'react-redux';
+import { getStoredState } from 'redux-persist/es/integration/getStoredStateMigrateV4';
 
 class Country extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            countries: []
+            countries: [],
+            searchResults: [],
+            searching: false
         };
         this.renderItem = this.renderItem.bind(this);
     }
 
+    searchText(text) {
+        this.setState({ searching: text.length > 0 });
+        let searchResults = [];
+        this.state.countries.countries.map(item => {
+            if (item.country.includes(text)) {
+                searchResults.push(item);
+            }
+            else{
+                
+            }
+        });
+        this.setState({ searchResults : searchResults });
+    }
     static getDerivedStateFromProps(props) {
         return {
             countries: props.countries
@@ -26,7 +42,6 @@ class Country extends Component {
     keyExtractor(item, index) {
         return item.country + index;
     }
-
     renderItem(row) {
         const { item, index } = row;
         let slno = index + 1;
@@ -65,17 +80,27 @@ class Country extends Component {
                     <View style={styles.toolBarTextView}>
                         <Text style={styles.toolBarText}>Country List</Text>
                     </View>
-                    <View style={styles.toolBarImageView}>
-                        <Image
-                            source={require('../assets/images/plus-hi.png')}
-                            style={styles.plusImageStyle}
-                        />
-                    </View>
+                </View>
+                <View
+                    style={{
+                        height: 50,
+                        backgroundColor: '#17CDB1',
+                        alignItems: 'center'
+                    }}>
+                    <TextInput
+                        placeholder="Search Country"
+                        style={{ color: 'black'}}
+                        onChangeText={text => this.searchText(text)}
+                    />
                 </View>
                 <View>
                     <FlatList
                         showsVerticalScrollIndicator={false}
-                        data={this.state.countries.countries}
+                        data={
+                            this.state.searching
+                                ? this.state.searchResults
+                                : this.state.countries.countries
+                        }
                         keyExtractor={this.keyExtractor}
                         renderItem={this.renderItem}
                     />

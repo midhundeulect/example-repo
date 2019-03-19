@@ -6,7 +6,10 @@ const GET_COUNTRIES_SUCCESS = 'ducks/countryDuck/GET_COUNTRIES_SUCCESS';
 const GET_COUNTRIES_FAILURE = 'ducks/countryDuck/GET_COUNTRIES_FAILURE';
 
 //Reducer
-export default function reducer(state = { loading: false, error: null, countries: [] }, action = {}) {
+export default function reducer(
+    state = { loading: false, error: null, countries: [] },
+    action = {}
+) {
     switch (action.type) {
         case GET_COUNTRIES:
             return {
@@ -52,7 +55,7 @@ export function getCountriesFailure(error) {
 
 //Side effects
 export function getCountries() {
-    console.log("*************************")
+    console.log('*************************');
     return async dispatch => {
         dispatch(getCountriesStart());
         const params = [`key=${KEY}`].join('&');
