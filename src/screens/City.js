@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Image,TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Image, TextInput } from 'react-native';
 import styles from '../styles/styles';
 import { connect } from 'react-redux';
 import { getCities } from '../ducks/cities';
@@ -11,7 +11,7 @@ class City extends Component {
             cities: [],
             country: props.navigation.getParam('country', null),
             state: props.navigation.getParam('states', null),
-            searchResults : [],
+            searchResults: [],
             searching: false
         };
         this.renderItem = this.renderItem.bind(this);
@@ -42,8 +42,7 @@ class City extends Component {
         this.setState({ searching: text.length > 0 });
         let searchResults = [];
         this.props.cities.cities[this.state.country][this.state.state].map(item => {
-            if (item.city.includes(text)) 
-                searchResults.push(item);
+            if (item.city.includes(text)) searchResults.push(item);
         });
         this.setState({ searchResults: searchResults });
     }
@@ -85,13 +84,13 @@ class City extends Component {
         );
     }
 
-    emptyCase = () =>{
-        return(
-            <View style = {{alignItems:"center",paddingTop:200}}>
+    emptyCase = () => {
+        return (
+            <View style={{ alignItems: 'center', paddingTop: 200 }}>
                 <Text>The City List Is Empty</Text>
-            </View>  
-        )
-    }
+            </View>
+        );
+    };
 
     render() {
         return (
@@ -115,7 +114,7 @@ class City extends Component {
                 </View>
                 <View>
                     <FlatList
-                        data={this.state.searching?this.state.searchResults:this.state.cities}
+                        data={this.state.searching ? this.state.searchResults : this.state.cities}
                         keyExtractor={this.keyExtractor}
                         ListEmptyComponent={this.emptyCase}
                         renderItem={this.renderItem}

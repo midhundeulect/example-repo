@@ -54,12 +54,10 @@ export function getStates(country) {
         const params = [`country=${country}`, `key=${KEY}`].join('&');
         try {
             let response = await fetch(`${BASE_URL}${STATES}?${params}`);
-            console.log(`${BASE_URL}${STATES}?${params}`);
             let json = await response.json();
-            if(json.data.message){
+            if (json.data.message) {
                 dispatch(getStatesFailure());
-            }
-            else{
+            } else {
                 dispatch(getStatesSuccess({ country: country, states: json.data }));
             }
         } catch (error) {

@@ -46,7 +46,6 @@ class Weather extends Component {
     }
 
     render() {
-        console.log(this.state);
         if (!this.state.weather) return null;
         return (
             <View>

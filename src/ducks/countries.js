@@ -55,18 +55,14 @@ export function getCountriesFailure(error) {
 
 //Side effects
 export function getCountries() {
-    console.log('*************************');
     return async dispatch => {
         dispatch(getCountriesStart());
         const params = [`key=${KEY}`].join('&');
-        console.log(`${BASE_URL}${COUNTRIES}?${params}`);
         try {
             let response = await fetch(`${BASE_URL}${COUNTRIES}?${params}`);
             let json = await response.json();
-            console.log(json);
             dispatch(getCountriesSuccess(json.data));
         } catch (error) {
-            console.log(error);
             dispatch(getCountriesFailure());
         }
     };

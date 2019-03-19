@@ -20,10 +20,9 @@ class Country extends Component {
         this.setState({ searching: text.length > 0 });
         let searchResults = [];
         this.state.countries.countries.map(item => {
-            if (item.country.includes(text))
-                searchResults.push(item);
+            if (item.country.includes(text)) searchResults.push(item);
         });
-        this.setState({ searchResults : searchResults });
+        this.setState({ searchResults: searchResults });
     }
     static getDerivedStateFromProps(props) {
         return {
@@ -32,8 +31,7 @@ class Country extends Component {
     }
 
     componentDidMount() {
-        if (this.props.countries.countries.length === 0) 
-        this.props.getCountries();
+        if (this.props.countries.countries.length === 0) this.props.getCountries();
     }
 
     keyExtractor(item, index) {
@@ -70,7 +68,6 @@ class Country extends Component {
         );
     }
 
-
     render() {
         return (
             <View>
@@ -87,7 +84,7 @@ class Country extends Component {
                     }}>
                     <TextInput
                         placeholder="Search Country"
-                        style={{ color: 'black'}}
+                        style={{ color: 'black' }}
                         onChangeText={text => this.searchText(text)}
                     />
                 </View>

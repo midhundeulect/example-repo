@@ -71,13 +71,14 @@ class State extends Component {
         );
     }
 
-    emptyCase = () =>{
-        return(
-            <View style = {{alignItems:"center",paddingTop:200}}>
+    emptyCase = () => {
+        if (this.state.states.loading) return null;
+        return (
+            <View style={{ alignItems: 'center', paddingTop: 200 }}>
                 <Text>The State List Is Empty</Text>
-            </View>  
-        )
-    }
+            </View>
+        );
+    };
 
     render() {
         return (
