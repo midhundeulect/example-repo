@@ -20,12 +20,8 @@ class Country extends Component {
         this.setState({ searching: text.length > 0 });
         let searchResults = [];
         this.state.countries.countries.map(item => {
-            if (item.country.includes(text)) {
+            if (item.country.includes(text))
                 searchResults.push(item);
-            }
-            else{
-                
-            }
         });
         this.setState({ searchResults : searchResults });
     }
@@ -36,7 +32,8 @@ class Country extends Component {
     }
 
     componentDidMount() {
-        if (this.props.countries.countries.length === 0) this.props.getCountries();
+        if (this.props.countries.countries.length === 0) 
+        this.props.getCountries();
     }
 
     keyExtractor(item, index) {
@@ -72,6 +69,7 @@ class Country extends Component {
             </View>
         );
     }
+
 
     render() {
         return (

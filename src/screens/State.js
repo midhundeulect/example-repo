@@ -30,11 +30,9 @@ class State extends Component {
         this.setState({ searching: text.length > 0 });
         let searchResults = [];
         this.state.states.states[this.state.country].map(item => {
-            if (item.state.includes(text)) {
-                searchResults.push(item);
-                this.setState({ searchResults: searchResults });
-            }
+            if (item.state.includes(text)) searchResults.push(item);
         });
+        this.setState({ searchResults: searchResults });
     }
 
     keyExtractor(item, index) {
@@ -73,6 +71,14 @@ class State extends Component {
         );
     }
 
+    emptyCase = () =>{
+        return(
+            <View style = {{alignItems:"center",paddingTop:200}}>
+                <Text>The State List Is Empty</Text>
+            </View>  
+        )
+    }
+
     render() {
         return (
             <View>
@@ -101,6 +107,7 @@ class State extends Component {
                                 : this.state.states.states[this.state.country]
                         }
                         keyExtractor={this.keyExtractor}
+                        ListEmptyComponent={this.emptyCase}
                         renderItem={this.renderItem}
                     />
                 </View>

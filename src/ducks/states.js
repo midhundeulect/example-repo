@@ -56,7 +56,12 @@ export function getStates(country) {
             let response = await fetch(`${BASE_URL}${STATES}?${params}`);
             console.log(`${BASE_URL}${STATES}?${params}`);
             let json = await response.json();
-            dispatch(getStatesSuccess({ country: country, states: json.data }));
+            if(json.data.message){
+                dispatch(getStatesFailure());
+            }
+            else{
+                dispatch(getStatesSuccess({ country: country, states: json.data }));
+            }
         } catch (error) {
             dispatch(getStatesFailure());
         }

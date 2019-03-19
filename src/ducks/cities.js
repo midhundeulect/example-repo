@@ -54,12 +54,15 @@ export function getCities(country, state) {
     return async dispatch => {
         dispatch(getCitiesStart());
         const params = [`state=${state}`, `country=${country}`, `key=${KEY}`].join('&');
-        console.log(params);
         try {
             let response = await fetch(`${BASE_URL}${CITIES}?${params}`);
-            console.log(`${BASE_URL}${CITIES}?${params}`);
             let json = await response.json();
-            dispatch(getCitiesSuccess({ country: country, state: state, cities: json.data }));
+            if(json.data.message){
+                dispatch(getCitiesFailure());
+            }
+            else{
+                dispatch(getCitiesSuccess({ country: country, state: state, cities: json.data }));
+            }
         } catch (error) {
             dispatch(getCitiesFailure());
         }

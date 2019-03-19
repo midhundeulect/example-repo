@@ -85,6 +85,14 @@ class City extends Component {
         );
     }
 
+    emptyCase = () =>{
+        return(
+            <View style = {{alignItems:"center",paddingTop:200}}>
+                <Text>The City List Is Empty</Text>
+            </View>  
+        )
+    }
+
     render() {
         return (
             <View>
@@ -109,6 +117,7 @@ class City extends Component {
                     <FlatList
                         data={this.state.searching?this.state.searchResults:this.state.cities}
                         keyExtractor={this.keyExtractor}
+                        ListEmptyComponent={this.emptyCase}
                         renderItem={this.renderItem}
                     />
                 </View>
