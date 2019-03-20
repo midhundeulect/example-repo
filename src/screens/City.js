@@ -12,7 +12,8 @@ class City extends Component {
             country: props.navigation.getParam('country', null),
             state: props.navigation.getParam('states', null),
             searchResults: [],
-            searching: false
+            searching: false,
+            loading: false
         };
         this.renderItem = this.renderItem.bind(this);
     }
@@ -26,7 +27,8 @@ class City extends Component {
         )
             cities = props.cities.cities[state.country][state.state];
         return {
-            cities: cities
+            cities: cities,
+            loading: props.cities.loading
         };
     }
 
@@ -84,7 +86,13 @@ class City extends Component {
         );
     }
 
-    emptyCase = () => {
+    emptyCase = loading => {
+        if (loading)
+            return (
+                <View style={{ alignItems: 'center', paddingTop: 200 }}>
+                    <Text>Loading</Text>
+                </View>
+            );
         return (
             <View style={{ alignItems: 'center', paddingTop: 200 }}>
                 <Text>The City List Is Empty</Text>
@@ -116,8 +124,8 @@ class City extends Component {
                     <FlatList
                         data={this.state.searching ? this.state.searchResults : this.state.cities}
                         keyExtractor={this.keyExtractor}
-                        ListEmptyComponent={this.emptyCase}
                         renderItem={this.renderItem}
+                        ListEmptyComponent={() => this.emptyCase(this.state.loading)}
                     />
                 </View>
             </View>

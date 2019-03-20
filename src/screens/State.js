@@ -11,14 +11,16 @@ class State extends Component {
             country: props.navigation.getParam('country', null),
             states: [],
             searchResults: [],
-            searching: false
+            searching: false,
+            loading: false
         };
         this.renderItem = this.renderItem.bind(this);
     }
 
     static getDerivedStateFromProps(props) {
         return {
-            states: props.states
+            states: props.states.states,
+            loading: props.states.loading
         };
     }
 
@@ -71,8 +73,13 @@ class State extends Component {
         );
     }
 
-    emptyCase = () => {
-        if (this.state.states.loading) return null;
+    emptyCase = loading => {
+        if (loading)
+            return (
+                <View style={{ alignItems: 'center', paddingTop: 200 }}>
+                    <Text>Loading</Text>
+                </View>
+            );
         return (
             <View style={{ alignItems: 'center', paddingTop: 200 }}>
                 <Text>The State List Is Empty</Text>
@@ -105,11 +112,11 @@ class State extends Component {
                         data={
                             this.state.searching
                                 ? this.state.searchResults
-                                : this.state.states.states[this.state.country]
+                                : this.state.states[this.state.country]
                         }
                         keyExtractor={this.keyExtractor}
-                        ListEmptyComponent={this.emptyCase}
                         renderItem={this.renderItem}
+                        ListEmptyComponent={() => this.emptyCase(this.state.loading)}
                     />
                 </View>
             </View>

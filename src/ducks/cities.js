@@ -57,10 +57,9 @@ export function getCities(country, state) {
         try {
             let response = await fetch(`${BASE_URL}${CITIES}?${params}`);
             let json = await response.json();
-            if(json.data.message){
+            if (json.data.message) {
                 dispatch(getCitiesFailure());
-            }
-            else{
+            } else {
                 dispatch(getCitiesSuccess({ country: country, state: state, cities: json.data }));
             }
         } catch (error) {
